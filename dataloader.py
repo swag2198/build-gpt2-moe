@@ -69,7 +69,7 @@ class DistributedDataLoader:
 
 class FineWebEduDataLoader(DistributedDataLoader):
     # initialize a single gpu dataloader as default
-    def __init__(self, B, T, process_rank=0, num_processes=1, split='train', data_root='/mnt/lustre/work/bethge/mwe102/build-gpt2/edu_fineweb10B', shuffle=True, master_process=True):
+    def __init__(self, B, T, process_rank=0, num_processes=1, split='train', data_root='/weka/bethge/mwe102/brendel/build-gpt2/edu_fineweb10B', shuffle=True, master_process=True):
         super().__init__(B, T, process_rank, num_processes, split, data_root, shuffle, master_process)
     
 
