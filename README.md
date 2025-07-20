@@ -31,3 +31,4 @@ This repository houses some of my experiments to understand how to train small (
 ## Results
 
 ## References
+The training codes are largely taken from [nanoGPT](https://github.com/karpathy/build-nanogpt), MoE modules are taken from [nanoMoE](https://github.com/wolfecameron/nanoMoE).
