@@ -16,4 +16,11 @@
 # sbatch --job-name="swinit" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-swinit-2025-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-swinit-2025-%j.err" run_single_gpu_use_switch_init.sh 16 2025
 
 # sbatch --job-name="onlymoek1" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoek1-2025-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoek1-2025-%j.err" run_single_gpu_moe_topk_1.sh 16 2025
-sbatch --job-name="onlymoek1n" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoek1-42-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoek1-42-%j.err" run_single_gpu_moe_topk_1.sh 16 42
+# sbatch --job-name="onlymoek1n" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoek1-42-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoek1-42-%j.err" run_single_gpu_moe_topk_1.sh 16 42
+
+# sbatch --job-name="onlymoe" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoe-1337-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-onlymoe-1337-%j.err" run_single_gpu.sh 16 1337
+# sbatch --job-name="noisyrouter" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-noisyrouter-1337-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-noisyrouter-1337-%j.err" run_single_gpu_noisy_router.sh 16 1337
+# sbatch --job-name="auxloss" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-auxloss-1337-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-auxloss-1337-%j.err" run_single_gpu_aux_loss.sh 16 1337
+# sbatch --job-name="zloss" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-zloss-1337-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-zloss-1337-%j.err" run_single_gpu_z_loss.sh 16 1337
+# sbatch --job-name="fullprec" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-fullprec-1337-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-fullprec-1337-%j.err" run_single_gpu_router_full_prec.sh 16 1338 # 1337 fails!
+# sbatch --job-name="swinit" --output="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-swinit-1337-%j.out" --error="../slurmoutputs/$(date +%Y%m%d_%H%M%S)-swinit-1337-%j.err" run_single_gpu_use_switch_init.sh 16 1337
