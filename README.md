@@ -2,22 +2,25 @@
 
 This repository houses some of my experiments to understand how to train small (~GPT2 scale) LLMs and their Mixture-of-Experts (MoEs) variants.
 
-<p align="center">
-  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/val_42_hella_42.png?raw=true" alt="val loss and hella for different MoE variants"/>
-</p>
-
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#dataset-used">Dataset used</a></li>
     <li><a href="#model-description">Repository structure</a></li>
+    <li><a href="#results">Results</a></li>
     <li><a href="#hyperparameters">Hyperparameters</a></li>
     <li><a href="#compute-resources">Compute resources</a></li>
-    <li><a href="#results">Results</a></li>
     <li><a href="#references-and-acknowledgements">References</a></li>
   </ol>
 </details>
+
+
+<p align="center">
+  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/val_42_hella_42.png?raw=true" alt="val loss and hella for different MoE variants"/>
+</p>
+
+
 
 
 ## Dataset used
@@ -41,6 +44,47 @@ training (imbalanced expert selection, router logits get too high, mixed-precisi
 
 I also ran some training with `top_k=1` (selects only 1 expert, identical to `no_moe` in parameter count, but each token can, in theory, choose a different FFN in expert layers), and `top_k=2` (each 
 token selects 2 experts) to see how the performance improves/degrades wrt the baseline.
+
+## Results
+
+While training, I tracked the validation loss and the accuracy of the HellaSwag evaluation for the models. The goal is to see if the training of MoEs becomes unstable at some point, and if we can
+circumvent it by using the training tricks from the literature.
+
+The training was done for 3 random seeds to account for random fluctuations, and the panel below shows
+the evolution of the metrics for each seed.
+
+### Q1. How stable/unstable is the MoE training, and do the tricks (aux_loss, z-loss and others described above etc.) help?
+
+
+**Validation loss plots**:
+<p align="center">
+  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/val_all_seeds.png?raw=true" alt="validation losses for 3 seeds"/>
+</p>
+
+
+**HellaSwag accuracies**:
+<p align="center">
+  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/hella_all_seeds.png?raw=true" alt="HellaSwag accuracies for 3 seeds"/>
+</p>
+
+From the above, we can clearly make some observations:
+- the baseline MoE model with simple router diverges for 2 of the 3 training runs,
+- adding noise to the router (yellow curve) helps in stabilizing the training and we don't see divergence for any of the 3 seeds here.
+- aux_loss (load balancing loss on top of noisy router, green curve) also shows _somewhat_ stable training, albeit having a little high val loss,
+- the other regularizations all seem to result in diverging losses, at least in this model size regime.
+
+
+### Q2. Do MoEs always outperform the baseline (non-MoE) model?
+
+Here, the goal is to see if we always get performance benefits by replacing the FFN layers with 
+multiple experts. Since the MoE models have more (active) parameters than non-MoE models, we would 
+expect MoEs to be better. 
+The below panel confirms that, and also interestingly shows that if we only choose 1 expert out of 8 (i.e., same active parameters as the non-MoE baseline), the performance is actually worse than the baseline.
+We see the stabilizing effect of noisy router here as well.
+
+<p align="center">
+  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/moe_vs_no_moe.png?raw=true" alt="val and hella for moe and non-moes"/>
+</p>
 
 ## Hyperparameters
 To train the model, you need to run [train_single_gpu.py](https://github.com/swag2198/build-gpt2/blob/main/train_single_gpu.py). The hyperparameters are mostly same as in nanoGPT training and can 
@@ -111,46 +155,6 @@ class Args:
 All training runs are done on an H100-80GB node on the [ferranti](https://portal.mlcloud.uni-tuebingen.de/user-guide/ferranti/ferranti_system_architecture/) cluster at the University of Tübingen 
 during my HiWi with Dr. Wieland Brendel at the ELLIS Institute, Tübingen.
 
-## Results
-
-While training, I tracked the validation loss and the accuracy of the HellaSwag evaluation for the models. The goal is to see if the training of MoEs becomes unstable at some point, and if we can
-circumvent it by using the training tricks from the literature.
-
-The training was done for 3 random seeds to account for random fluctuations, and the panel below shows
-the evolution of the metrics for each seed.
-
-### Q1. How stable/unstable is the MoE training, and do the tricks (aux_loss, z-loss and others described above etc.) help?
-
-
-**Validation loss plots**:
-<p align="center">
-  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/val_all_seeds.png?raw=true" alt="validation losses for 3 seeds"/>
-</p>
-
-
-**HellaSwag accuracies**:
-<p align="center">
-  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/hella_all_seeds.png?raw=true" alt="HellaSwag accuracies for 3 seeds"/>
-</p>
-
-From the above, we can clearly make some observations:
-- the baseline MoE model with simple router diverges for 2 of the 3 training runs,
-- adding noise to the router (yellow curve) helps in stabilizing the training and we don't see divergence for any of the 3 seeds here.
-- aux_loss (load balancing loss on top of noisy router, green curve) also shows _somewhat_ stable training, albeit having a little high val loss,
-- the other regularizations all seem to result in diverging losses, at least in this model size regime.
-
-
-### Q2. Do MoEs always outperform the baseline (non-MoE) model?
-
-Here, the goal is to see if we always get performance benefits by replacing the FFN layers with 
-multiple experts. Since the MoE models have more (active) parameters than non-MoE models, we would 
-expect MoEs to be better. 
-The below panel confirms that, and also interestingly shows that if we only choose 1 expert out of 8 (i.e., same active parameters as the non-MoE baseline), the performance is actually worse than the baseline.
-We see the stabilizing effect of noisy router here as well.
-
-<p align="center">
-  <img src="https://github.com/swag2198/build-gpt2/blob/main/results/figures/moe_vs_no_moe.png?raw=true" alt="val and hella for moe and non-moes"/>
-</p>
 
 
 ## References and acknowledgements
