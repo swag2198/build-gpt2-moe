@@ -1,6 +1,6 @@
 # build-gpt2-moe
 
-This repository houses some of my experiments to understand how to train small (~GPT2 scale) LLMs and their Mixture-of-Experts (MoEs) variants.
+This is a playground repository for some my experiments to understand how to train small (~GPT2 scale) LLMs and their Mixture-of-Experts (MoEs) variants.
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
