@@ -7,7 +7,7 @@ This is a playground repository for some my experiments to understand how to tra
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#dataset-used">Dataset used</a></li>
-    <li><a href="#model-description">Repository structure</a></li>
+    <li><a href="#model-description">Model description</a></li>
     <li><a href="#results">Results</a></li>
     <li><a href="#hyperparameters">Hyperparameters</a></li>
     <li><a href="#compute-resources">Compute resources</a></li>
